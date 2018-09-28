@@ -106,9 +106,9 @@ void bubbleSort()
         heights[j+1] = heights[j];
         heights[j] = tempHeight;
       }
-    
-      //drawLines();
     }
+    
+    drawLines();
   }
 }
 
@@ -128,27 +128,35 @@ void drawLines()
  
     if(y < (maxHeight / 6))
     {
+      fill(255,(y * 6),0);
       stroke(255,(y * 6),0);
     }
     else if(y < (maxHeight * (.33)))
     {
+      fill(255 - ((y-(maxHeight / 6)) * 6),255,0);
       stroke(255 - ((y-(maxHeight / 6)) * 6),255,0);
     }
     else if(y < (maxHeight * (.5)))
     {
+      fill(0,255,((y-(maxHeight * .33)) * 6));
       stroke(0,255,((y-(maxHeight * .33)) * 6));
     }
     else if(y < (maxHeight * (.66)))
     {
+      fill(0,255 - ((y - (maxHeight * .5)) * 6),255);
       stroke(0,255 - ((y - (maxHeight * .5)) * 6),255);
     }
     else if(y < (maxHeight * (.83)))
     {
+      fill(((y - (maxHeight * .66)) * 6),0,255);
       stroke(((y - (maxHeight * .66)) * 6),0,255);
     }
     else
+    {
+      fill(255,0,255-((y - (maxHeight * .83)) * 6));
       stroke(255,0,255-((y - (maxHeight * .83)) * 6));
-    
-      line(x,height,x,height - y);
+    }
+      ellipse(x,height - y,lineWidth,lineWidth);
+      //line(x,height - y + lineWidth,x,height - y);
   }
 }
