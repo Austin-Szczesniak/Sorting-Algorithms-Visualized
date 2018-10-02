@@ -1,68 +1,57 @@
-int numLine = 1490;
 int numWidth = 1;
 int lineWidth = 1;
-int[] heights = new int[numLine];
-int[] pos = new int[numLine];
-int maxHeight = 750;
+int maxHeight;
 int bubbleBoi;
 int sortType = 1;
-
 long sI = 0;
+double time;
+int[] heights, pos;
+String sortTypeS = "Bubble Sort";
 
 void setup() 
 {
-  size(1500,800);
+  size(800,400);
+  frame.setResizable(true);
+  
   background(0);
   strokeWeight(numWidth);
   stroke(255,0,0);
+  
   sI = System.nanoTime();
-  
-  int x = 0;
-  int y = 0;
-  
-  //Create lines of varying heights and create list of heights and list of positions
-  for(int i = 0; i < heights.length; i++)  
-  {
-    x += lineWidth;
-    y = (int)random(maxHeight);
-    pos[i] = x;
-    heights[i] = y;
-  }
-  
-  drawLines();
-  
-  for(int i = 0; i < heights.length; i++)  
-  {
-    System.out.println(heights[i] + "," + pos[i]);
-  }
+  createLines();
 }
 
 void draw()  
 {  
  background(0);
  
- // Print frame rate
- textSize(32);
- text(frameRate, 10, 30); 
- 
- float time = (System.nanoTime() - sI) / 1000000000.0;
+ if(!isDone())
+ {
+   time = (System.nanoTime() - sI) / 1000000000.0;
+   time = Math.floor(time * 100) / 100;  // Truncates to 2 decimals
+ }
  
  switch(sortType)
  {
    case 1:
      bubbleSort(bubbleBoi);
      bubbleBoi++;
-     text("Bubble Sort " + "seconds: " + time, 1000, 30);
+     sortTypeS = "Bubble Sort";
      break;
    case 2:
-     text("Insert Sort " + "seconds: " + time, 1000, 30);
      insertSort();
+     sortTypeS = "Insert Sort";
      break;
    case 3:
      sortType = 1;
      bubbleBoi = 0;
      break;   
  }
+ 
+ // sort type, time elapsed, and framerate
+ textSize(height / 20);
+ fill(255);
+ text(sortTypeS + " T-Elapsed: " + time + " FPS: " + frameRate, .01 * width, .05 * height);
 }
 
 //-------------------------- 
@@ -106,6 +95,31 @@ void bubbleSort(int n)
 //-------------------------- 
 // Random functions
 //--------------------------
+void createLines()
+{ 
+  int numLine = width / numWidth;
+  maxHeight = height;
+  heights = new int[numLine];
+  pos = new int[numLine];
+  
+  int x = 0;
+  int y = 0;
+  
+  //Create lines of varying heights and create list of heights and list of positions
+  for(int i = 0; i < heights.length; i++)  
+  {
+    x += lineWidth;
+    y = (int)random(maxHeight);
+    pos[i] = x;
+    heights[i] = y;
+  }
+  
+  drawLines();
+  
+  for(int i = 0; i < heights.length; i++)  
+    System.out.println(heights[i] + "," + pos[i]);
+}
+
 void drawLines()
 {
  int x = 0;
@@ -147,6 +161,7 @@ void drawLines()
       fill(255,0,255-((y - (maxHeight * .83)) * 6));
       stroke(255,0,255-((y - (maxHeight * .83)) * 6));
     }
+    
       //ellipse(x,height - y,lineWidth,lineWidth);
       line(x,height - y + lineWidth,x,height);
   }
@@ -161,22 +176,14 @@ void keyPressed()
   sortType++;
   sI = System.nanoTime();
   
-  int x = 0;
-  int y = 0;
-  
-  //Create lines of varying heights and create list of heights and list of positions
-  for(int i = 0; i < heights.length; i++)  
-  {
-    x += lineWidth;
-    y = (int)random(maxHeight);
-    
-    pos[i] = x;
-    heights[i] = y;
-  }
-  
-  for(int i = 0; i < heights.length; i++)  {
-    System.out.println(heights[i] + "," + pos[i]);
-  }
-  
-  drawLines();
+  createLines();  
+}
+
+boolean isDone()
+{
+  for(int i = 0; i < heights.length - 1; i++)
+    if(heights[i] > heights[i + 1])
+      return false;
+      
+  return true;
 }
